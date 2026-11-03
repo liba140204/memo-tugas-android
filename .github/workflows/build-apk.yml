@@ -25,9 +25,16 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      
       - name: Extract project
         run: |
-          unzip Memo_Tugas_3_0_Android_Project.zip -d source
+          ZIP_FILE=$(find . -maxdepth 1 -type f -iname '*.zip' | head -n 1)
+          if [ -z "$ZIP_FILE" ]; then
+            echo "File ZIP proyek tidak ditemukan"
+            exit 1
+          fi
+          echo "Menggunakan file: $ZIP_FILE"
+          unzip "$ZIP_FILE" -d source
 
       - name: Build APK
         run: |
