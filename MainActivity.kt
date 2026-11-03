@@ -281,4 +281,4 @@ class MainActivity : AppCompatActivity() {
         return ((due.timeInMillis - today.timeInMillis) / 86400000L).toInt()
     }
     private fun dateText(time: Long) = SimpleDateFormat("dd MMM yyyy", Locale("id", "ID")).format(Date(time))
-}\n
+}
