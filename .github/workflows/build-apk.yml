@@ -10,12 +10,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -25,16 +26,25 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      
       - name: Extract project
         run: |
-          ZIP_FILE=$(find . -maxdepth 1 -type f -iname '*.zip' | head -n 1)
+          mkdir -p source
+
+          ZIP_FILE=$(find . -type f -iname '*.zip' \
+            -not -path './.git/*' | head -n 1)
+
           if [ -z "$ZIP_FILE" ]; then
             echo "File ZIP proyek tidak ditemukan"
             exit 1
           fi
+
           echo "Menggunakan file: $ZIP_FILE"
-          unzip "$ZIP_FILE" -d source
+          unzip -o "$ZIP_FILE" -d source
+
+      - name: Locate Android project
+        run: |
+          find source -name settings.gradle \
+            -o -name settings.gradle.kts
 
       - name: Build APK
         run: |
@@ -45,4 +55,3 @@ jobs:
         with:
           name: Memo-Tugas-3.0-APK
           path: source/MemoTugas30/app/build/outputs/apk/debug/app-debug.apk
-          
